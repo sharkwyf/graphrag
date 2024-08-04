@@ -70,5 +70,6 @@ ragtest/
 # user defined
 lancedb
 lancedb/
-inputs/
 .vscode
+inputs/laws/
+inputs/ragtest/
