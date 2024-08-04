@@ -2,7 +2,9 @@
 
 ### 安装环境依赖
 
-    ```pip install -r inputs/requirements.txt```
+    ```
+    pip install -r inputs/requirements.txt
+    ```
 
 ### 初始化GraphRAG（完整样例参考 `inputs/initialize_data.sh`）
 
@@ -122,7 +124,7 @@
    Json filter: result
    Ensure ASCII: False
    ```
-   
+
 5. 添加一个结束节点，并配置如下：
    ```
    Output Variable: result, {{#JSON解析.body#}}
