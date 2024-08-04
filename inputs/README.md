@@ -2,9 +2,9 @@
 
 ### 安装环境依赖
 
-    ```
-    pip install -r inputs/requirements.txt
-    ```
+```
+pip install -r inputs/requirements.txt
+```
 
 ### 初始化GraphRAG（完整样例参考 `inputs/initialize_data.sh`）
 
