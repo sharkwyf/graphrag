@@ -66,3 +66,9 @@ ragtest/
 .ragtest/
 .pipelines
 .pipeline
+
+# user defined
+lancedb
+lancedb/
+inputs/
+.vscode
