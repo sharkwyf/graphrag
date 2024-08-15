@@ -95,7 +95,7 @@ class GraphRAGDeployment:
     
     async def graphrag_search(
         self,
-        root: str | None = None,
+        root_dir: str | None = None,
         method: str | None = None,
         community_level: int = 2,
         response_type: str = "Multiple Paragraphs",
@@ -104,17 +104,17 @@ class GraphRAGDeployment:
     ):
         if response_type == "":
             response_type = "Multiple Paragraphs"
-        print(f"Receive inputs: {method}, {community_level}, {response_type}, {query}")
+        print(f"Receive inputs: {root_dir}, {method}, {community_level}, {response_type}, {query}")
 
         if method == "global":
             response = await asyncio.get_event_loop().run_in_executor(
                 self.executor,
-                run_global_search, None, root, community_level, response_type, query
+                run_global_search, None, None, root_dir, community_level, response_type, query
             )
         elif method == "local":
             response = await asyncio.get_event_loop().run_in_executor(
                 self.executor,
-                run_local_search, None, root, community_level, response_type, query
+                run_local_search, None, None, root_dir, community_level, response_type, query
             )
         else:
             raise NotImplementedError()
@@ -189,6 +189,17 @@ class GraphRAGDeployment:
         }
         return response
 
+def get_external_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # 连接到一个公共的DNS服务器
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = "0.0.0.0"
+    finally:
+        s.close()
+    return ip
 
 def main(args: ScriptArguments):
     # ray.init(address="local", num_gpus=1)
@@ -202,7 +213,10 @@ def main(args: ScriptArguments):
             route_prefix=args.route_prefix,
         ).bind(args=args),
     )
+    
+    external_ip = get_external_ip()
     print(f"API deployed at http://{args.host}:{args.port}{args.route_prefix}")
+    print(f"External access: http://{external_ip}:{args.port}{args.route_prefix}")
 
     @ray.remote
     def check_api_service():
@@ -210,7 +224,7 @@ def main(args: ScriptArguments):
             "point": "app",
             "params": {
                 "inputs": {
-                    "root": "inputs/laws/",
+                    "root_dir": "inputs/laws/",
                     "community_level": 2,
                     "response_type": "Multiple Paragraphs",
                 },
