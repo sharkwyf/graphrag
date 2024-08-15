@@ -1,7 +1,7 @@
 
 export no_proxy=$no_proxy
 
-data_path=./inputs/laws
+data_path=./inputs/习近平：在全国科技大会、国家科学技术奖励大会、两院院士大会上的讲话
 
 # make dir & upload files
 echo "Creating data directory at $data_path"
