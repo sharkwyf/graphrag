@@ -155,23 +155,6 @@ class GraphRAGDeployment:
         }
         return response
 
-    @app.post("/global_search")
-    async def global_search_handler(self, request: Request) -> Dict:
-        """
-        """
-        data = await request.json()
-        if data["point"] == "ping":
-            result = "pong"
-        else:
-            if "query" in data["params"]["inputs"]:
-                data["params"]["inputs"].pop("query")
-            result = await self.graphrag_search(method="global", query=data["params"]["query"], **data["params"]["inputs"])
-        response = {
-            "model": self.app_name,
-            "result": result,
-        }
-        return response
-
     @app.post("/search")
     async def search_handler(self, request: Request) -> Dict:
         """
@@ -224,15 +207,16 @@ def main(args: ScriptArguments):
             "point": "app",
             "params": {
                 "inputs": {
-                    "root_dir": "inputs/laws/",
+                    "root_dir": "inputs/Xijinping/",
+                    "method": "local",
                     "community_level": 2,
                     "response_type": "Multiple Paragraphs",
                 },
-                "query": "What are the top themes in this story?",
+                "query": "成为科技强国的要素是什么？",
             }
         }
         res = requests.post(
-            url=f"http://{args.host}:{args.port}{args.route_prefix}/global_search",
+            url=f"http://{args.host}:{args.port}{args.route_prefix}/search",
             json=data,
         )
         if res.status_code != 200:
