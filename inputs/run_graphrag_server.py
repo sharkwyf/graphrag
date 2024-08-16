@@ -27,19 +27,18 @@ curl http://10.140.1.178:33600/v1/local_search \
             "query": "What are the top themes in this story?"
         }
       }'
-curl http://10.140.1.178:33600/v1/search \
+curl http://10.140.0.133:33600/v1/search \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
         "point": "app",
         "params": {
             "inputs": {
-                "root: "inputs/laws/",
-                "method": "global",
+                "root: "inputs/Xijinping/",
+                "method": "local",
                 "community_level": 2,
                 "response_type": "Multiple Paragraphs"
             },
-            "query": "What are the top themes in this story?"
+            "query": "成为科技强国的要素是什么？"
         }
       }'
 """
@@ -119,6 +118,7 @@ class GraphRAGDeployment:
         else:
             raise NotImplementedError()
 
+        print(f"Search result:\n{response}")  # 打印搜索结果
         return response
 
     @app.post("/global_search")
@@ -226,7 +226,7 @@ def main(args: ScriptArguments):
     start_t = datetime.now()
     results = ray.get([check_api_service.remote() for i in range(args.num_tests)])
     end_t = datetime.now()
-    print(f"Processed {args.num_tests} items in {end_t - start_t} s: {results}")
+    print(f"Processed {args.num_tests} items in {end_t - start_t} s:\n{results}")
     print(f"Run following command to forward the port:\n`echo RUNNING && socat TCP-LISTEN:{args.port},fork,reuseaddr TCP:{socket.gethostbyname(socket.gethostname())}:{args.port}`")
     input("Press enter to quit")
 
